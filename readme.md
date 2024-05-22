@@ -1,11 +1,13 @@
 This is basic game using pygame.  
 You can run this project by following some steps:  
-Install requirements: 
+Install requirements:
+
 ```
 pip install requirements.txt
-```  
-Run:  
-```
-python main.py 
 ```
 
+Run:
+
+```
+python main.py
+```
