@@ -1,0 +1,7 @@
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+GAME_NAME = "Dungeon Craler"
+
+# colors
+WHITE = (255, 255, 255)
