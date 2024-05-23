@@ -3,7 +3,7 @@ You can run this project by following some steps:
 Install requirements:
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 Run:
