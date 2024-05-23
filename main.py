@@ -2,25 +2,27 @@ import pygame
 from config import constant
 from player import Player
 from utils.utils import scaleImage
+import sys
+import os
 
 pygame.init()
-
 clock = pygame.time.Clock()
 pygame.display.set_caption(constant.GAME_NAME)
 
 screen = pygame.display.set_mode((constant.SCREEN_WIDTH, constant.SCREEN_HEIGHT))
 
-playerImage = pygame.image.load(
-    "assets/images/characters/elf/idle/0.png"
-).convert_alpha()
-playerImage = scaleImage(playerImage, constant.SCALE)
-player = Player(100, 100, playerImage)
+pathPlayerImage = "assets/images/characters/elf/idle/"
+playerAnimationList = []
+for i in os.listdir(pathPlayerImage):
+    playerImage = pygame.image.load(pathPlayerImage + i)
+    playerImage = scaleImage(playerImage, constant.SCALE)
+    playerAnimationList.append(playerImage)
+player = Player(100, 100, playerAnimationList)
 
-run = True
 
 moving_up, moving_down, moving_right, moving_left = False, False, False, False
 
-while run:
+while True:
     clock.tick(constant.FPS)
     screen.fill(constant.BACKGROUND)
     dx, dy = 0, 0
@@ -33,12 +35,13 @@ while run:
     if moving_right:
         dx += constant.SPEED
 
-    player.update(dx, dy)
+    player.move(dx, dy)
     player.draw(screen, constant.WHITE)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            pygame.quit()
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 moving_left = True
@@ -59,5 +62,3 @@ while run:
                 moving_down = False
 
     pygame.display.update()
-
-pygame.quit()
