@@ -1,7 +1,13 @@
-import pygame
+from os import walk
 from config import gameConstant, charactersConstant
+import pygame
 import sys
+from weapons.arrow import Arrow
+from weapons.bow import Bow
+from weapons.imageWeapons import imageWeaponInstance
+import random
 
+pathWeaponsImage = "assets/images/weapons/"
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -10,7 +16,25 @@ screen = pygame.display.set_mode(
     (gameConstant.SCREEN_WIDTH, gameConstant.SCREEN_HEIGHT)
 )
 
-player = charactersConstant.charactersLists[charactersConstant.impName](100, 100)
+player = charactersConstant.charactersLists[charactersConstant.skeletonName](100, 100)
+weapon = Bow(
+    player.rect,
+    imageWeaponInstance.imageLists["bow"],
+    imageWeaponInstance.imageLists["arrow"],
+)
+
+arrowGroup = pygame.sprite.Group()
+enermies = []
+enermies.append(
+    charactersConstant.charactersLists[charactersConstant.bigDemonName](
+        random.randint(100, 300), random.randint(100, 300)
+    )
+)
+enermies.append(
+    charactersConstant.charactersLists[charactersConstant.skeletonName](
+        random.randint(100, 300), random.randint(100, 300)
+    )
+)
 
 
 def main():
@@ -29,7 +53,29 @@ def main():
             dx += gameConstant.SPEED
 
         player.move(dx, dy)
+        player.update()
+        for indexEnermy in range(len(enermies)):
+            print(indexEnermy)
+            if not enermies[indexEnermy].isALive:
+                enermies.pop(indexEnermy)
+
+        for arrow in arrowGroup:
+            arrow.update(enermies)
+        newArrow = weapon.update()
+
+        if newArrow:
+            arrowGroup.add(newArrow)
+
         player.render(screen, gameConstant.WHITE)
+        weapon.render(screen)
+        for enermy in enermies:
+            enermy.render(screen, gameConstant.RED)
+            # print(enermy.health)
+
+        for arrow in arrowGroup:
+            arrow.render(screen)
+
+        # print("arrows::", arrowGroup)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

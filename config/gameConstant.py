@@ -1,6 +1,7 @@
 # colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
 
 
 # game
@@ -13,4 +14,7 @@ FPS = 60
 
 # player
 SPEED = 5
+ARROW_SPEED = 5
 SCALE = 3
+SCALE_WEAPONS = 1.5
+HEALTH = 100

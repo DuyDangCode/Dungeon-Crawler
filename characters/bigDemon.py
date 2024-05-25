@@ -1,6 +1,7 @@
 from characters.baseCharacter import BaseCharacter
 from characters.imageCharacter import imageFacotry
 from config import charactersConstant
+from config.gameConstant import HEALTH
 
 
 class BigDemon(BaseCharacter):
@@ -11,4 +12,5 @@ class BigDemon(BaseCharacter):
             imageFacotry.imageLists[
                 charactersConstant.bigDemonName
             ].playerAnimationList,
+            HEALTH,
         )

@@ -1,6 +1,7 @@
 from characters.baseCharacter import BaseCharacter
 from characters.imageCharacter import imageFacotry
 from config import charactersConstant
+from config.gameConstant import HEALTH
 
 
 class Skeleton(BaseCharacter):
@@ -11,4 +12,5 @@ class Skeleton(BaseCharacter):
             imageFacotry.imageLists[
                 charactersConstant.skeletonName
             ].playerAnimationList,
+            HEALTH,
         )
