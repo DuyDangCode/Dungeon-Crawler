@@ -3,23 +3,22 @@ from config import gameConstant
 from utils.imageUtils import scaleImage
 import os
 
-pathPlayerImage = "assets/images/weapons/"
+pathImageWeapons = "assets/images/weapons/"
 
 
 class ImageWeapon:
-    def __new__(cls, arg):
+    def __new__(cls):
         if not hasattr(cls, "instance"):
             cls.instance = super().__new__(cls)
         return cls.instance
 
-    def __init__(self, path) -> None:
+    def __init__(self) -> None:
         imageLists = {}
-        for name in os.listdir(path):
-            image = pygame.image.load(path + "/" + name)
+        for name in os.listdir(pathImageWeapons):
+            image = pygame.image.load(pathImageWeapons + "/" + name)
             image = scaleImage(image, gameConstant.SCALE_WEAPONS)
             imageLists[name.split(".")[0]] = image
         self.imageLists = imageLists
-        print(self.imageLists.keys())
 
 
-imageWeaponInstance = ImageWeapon(pathPlayerImage)
+imageWeaponInstance = ImageWeapon()

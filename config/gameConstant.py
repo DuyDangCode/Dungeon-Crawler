@@ -5,6 +5,7 @@ import pygame
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+PANEL = (50, 50, 50)
 
 
 # game
@@ -19,6 +20,7 @@ FPS = 60
 SPEED = 5
 ARROW_SPEED = 5
 SCALE = 3
+SCALE_ITEMS = 3
 SCALE_WEAPONS = 1.3
 HEALTH = 100
 

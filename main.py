@@ -3,9 +3,9 @@ from config import gameConstant, charactersConstant
 import pygame
 import sys
 from item.damageText import DamageText
+from item.heart import Heart
 from weapons.arrow import Arrow
 from weapons.bow import Bow
-from weapons.imageWeapons import imageWeaponInstance
 import random
 
 # pathWeaponsImage = "assets/images/weapons/"
@@ -20,11 +20,7 @@ screen = pygame.display.set_mode(
 )
 
 player = charactersConstant.charactersLists["elf"](100, 100)
-weapon = Bow(
-    player.rect,
-    imageWeaponInstance.imageLists["bow"],
-    imageWeaponInstance.imageLists["arrow"],
-)
+weapon = Bow(player.rect)
 
 arrowGroup = pygame.sprite.Group()
 enermies = []
@@ -40,6 +36,16 @@ enermies.append(
 )
 
 damageTextGroup = pygame.sprite.Group()
+
+heart = Heart(player)
+
+
+def drawInfo(screen):
+    pygame.draw.line(
+        screen, gameConstant.WHITE, (0, 50), (gameConstant.SCREEN_WIDTH, 50), 1
+    )
+    pygame.draw.rect(screen, gameConstant.PANEL, (0, 0, gameConstant.SCREEN_WIDTH, 50))
+    heart.render(screen)
 
 
 def main():
@@ -89,6 +95,7 @@ def main():
         for arrow in arrowGroup:
             arrow.render(screen)
 
+        drawInfo(screen)
         # print("arrows::", arrowGroup)
 
         for event in pygame.event.get():

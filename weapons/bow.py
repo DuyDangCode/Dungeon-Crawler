@@ -1,16 +1,16 @@
 import pygame
 import math
-
+from weapons.imageWeapons import imageWeaponInstance
 from weapons.arrow import Arrow
 
 
 class Bow:
-    def __init__(self, rec, image, imageArrow):
+    def __init__(self, rec):
         self.rec = rec
         self.angle = 0
-        self.originalImage = image
+        self.originalImage = imageWeaponInstance.imageLists["bow"]
         self.image = pygame.transform.rotate(self.originalImage, self.angle)
-        self.imageArrow = imageArrow
+        self.imageArrow = imageWeaponInstance.imageLists["arrow"]
         self.lastArrowTime = pygame.time.get_ticks()
         self.cooldownShoot = 300
         self.isShooting = False

@@ -12,7 +12,7 @@ class Elf(BaseCharacter):
             x,
             y,
             imageFacotry.imageLists[charactersConstant.elfName].playerAnimationList,
-            gameConstant.HEALTH,
+            60,
         )
 
     def render(self, surface, color):
