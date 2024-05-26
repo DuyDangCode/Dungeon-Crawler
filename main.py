@@ -2,6 +2,7 @@ from os import walk
 from config import gameConstant, charactersConstant
 import pygame
 import sys
+from item.coin import Coin
 from item.damageText import DamageText
 from item.heart import Heart
 from weapons.arrow import Arrow
@@ -38,6 +39,7 @@ enermies.append(
 damageTextGroup = pygame.sprite.Group()
 
 heart = Heart(player)
+coin = Coin(gameConstant.SCREEN_WIDTH - 100, 25)
 
 
 def drawInfo(screen):
@@ -46,6 +48,9 @@ def drawInfo(screen):
     )
     pygame.draw.rect(screen, gameConstant.PANEL, (0, 0, gameConstant.SCREEN_WIDTH, 50))
     heart.render(screen)
+    coin.render(screen)
+    scoreImage = atariFont.render("x00", True, gameConstant.WHITE)
+    screen.blit(scoreImage, (gameConstant.SCREEN_WIDTH - 80, 15))
 
 
 def main():
