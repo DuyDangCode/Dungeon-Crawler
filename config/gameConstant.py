@@ -1,4 +1,7 @@
 # colors
+import pygame
+
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -16,5 +19,13 @@ FPS = 60
 SPEED = 5
 ARROW_SPEED = 5
 SCALE = 3
-SCALE_WEAPONS = 1.5
+SCALE_WEAPONS = 1.3
 HEALTH = 100
+
+# path
+FONT_PATH = "assets/fonts/"
+FONT_PATH_ATARI = FONT_PATH + "AtariClassic.ttf"
+
+
+# font
+FONT_SIZE = 20

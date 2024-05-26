@@ -2,21 +2,24 @@ from os import walk
 from config import gameConstant, charactersConstant
 import pygame
 import sys
+from item.damageText import DamageText
 from weapons.arrow import Arrow
 from weapons.bow import Bow
 from weapons.imageWeapons import imageWeaponInstance
 import random
 
-pathWeaponsImage = "assets/images/weapons/"
+# pathWeaponsImage = "assets/images/weapons/"
 
 pygame.init()
 clock = pygame.time.Clock()
+atariFont = pygame.font.Font(gameConstant.FONT_PATH_ATARI, gameConstant.FONT_SIZE)
+
 pygame.display.set_caption(gameConstant.GAME_NAME)
 screen = pygame.display.set_mode(
     (gameConstant.SCREEN_WIDTH, gameConstant.SCREEN_HEIGHT)
 )
 
-player = charactersConstant.charactersLists[charactersConstant.skeletonName](100, 100)
+player = charactersConstant.charactersLists["elf"](100, 100)
 weapon = Bow(
     player.rect,
     imageWeaponInstance.imageLists["bow"],
@@ -36,6 +39,8 @@ enermies.append(
     )
 )
 
+damageTextGroup = pygame.sprite.Group()
+
 
 def main():
     moving_up, moving_down, moving_right, moving_left = False, False, False, False
@@ -54,13 +59,20 @@ def main():
 
         player.move(dx, dy)
         player.update()
-        for indexEnermy in range(len(enermies)):
-            print(indexEnermy)
-            if not enermies[indexEnermy].isALive:
-                enermies.pop(indexEnermy)
 
         for arrow in arrowGroup:
-            arrow.update(enermies)
+            damage, damagePos = arrow.update2(enermies)
+            if damage:
+                damageTextGroup.add(
+                    DamageText(
+                        damagePos[0],
+                        damagePos[1],
+                        damage,
+                        gameConstant.RED,
+                        atariFont,
+                    )
+                )
+
         newArrow = weapon.update()
 
         if newArrow:
@@ -71,6 +83,8 @@ def main():
         for enermy in enermies:
             enermy.render(screen, gameConstant.RED)
             # print(enermy.health)
+        for damageText in damageTextGroup:
+            damageText.render(screen)
 
         for arrow in arrowGroup:
             arrow.render(screen)

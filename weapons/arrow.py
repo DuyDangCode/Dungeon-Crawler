@@ -3,6 +3,8 @@ import math
 from config import gameConstant
 import random
 
+from item.damageText import DamageText
+
 
 class Arrow(pygame.sprite.Sprite):
     def __init__(self, x, y, angle, image):
@@ -15,7 +17,9 @@ class Arrow(pygame.sprite.Sprite):
         self.dx = math.cos(math.radians(self.angle)) * gameConstant.ARROW_SPEED
         self.dy = -math.sin(math.radians(self.angle)) * gameConstant.ARROW_SPEED
 
-    def update(self, enermies):
+    def update2(self, enermies):
+        damage = 0
+        damagePos = None
         self.rect.x += int(self.dx)
         self.rect.y += int(self.dy)
         if (
@@ -28,10 +32,14 @@ class Arrow(pygame.sprite.Sprite):
 
         for enermy in enermies:
             if self.rect.colliderect(enermy.rect) and enermy.isALive:
-                enermy.health -= 10 + random.randint(0, 10)
+                damage = 10 + random.randint(0, 10)
+                enermy.health -= damage
+                damagePos = (enermy.rect.centerx, enermy.rect.centery)
+
                 self.kill()
                 if enermy.health < 0:
                     enermy.isALive = False
+        return damage, damagePos
 
     def render(self, surface):
         surface.blit(self.image, (self.rect.centerx, self.rect.centery))
