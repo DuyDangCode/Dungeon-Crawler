@@ -1,8 +1,9 @@
 import pygame
 from item.imageItem import imageItemInstance
+import random
 
 
-class Coin:
+class CoinIcon:
     def __init__(self, x, y):
         self.animationList = []
         for i in range(4):
@@ -23,3 +24,23 @@ class Coin:
     def render(self, surface):
         self.update()
         surface.blit(self.animationList[self.indexFrame], self.rect)
+
+
+class Coin(CoinIcon, pygame.sprite.Sprite):
+    def __init__(self, x, y, player):
+        super().__init__(x, y)
+        pygame.sprite.Sprite.__init__(self)
+        self.player = player
+        # for i in range(4):
+        #     self.animationList[i] = pygame.transform.scale_by(
+        #         self.animationList[i], 0.5
+        #     )
+
+    def update(self):
+        if self.rect.colliderect(self.player.rect):
+            self.player.score += 10 + random.randint(0, 10)
+            self.kill()
+        super().update()
+
+    def render(self, surface):
+        super().render(surface)

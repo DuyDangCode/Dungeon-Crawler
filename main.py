@@ -2,9 +2,10 @@ from os import walk
 from config import gameConstant, charactersConstant
 import pygame
 import sys
-from item.coin import Coin
+from item.coin import Coin, CoinIcon
 from item.damageText import DamageText
 from item.heart import Heart
+from item.potionRed import PotionRed
 from weapons.arrow import Arrow
 from weapons.bow import Bow
 import random
@@ -39,17 +40,33 @@ enermies.append(
 damageTextGroup = pygame.sprite.Group()
 
 heart = Heart(player)
-coin = Coin(gameConstant.SCREEN_WIDTH - 100, 25)
+coinIcon = CoinIcon(gameConstant.SCREEN_WIDTH - 100, 25)
+
+coinGroup = pygame.sprite.Group()
+
+coinGroup.add(Coin(200, 200, player))
+coinGroup.add(Coin(250, 200, player))
+coinGroup.add(Coin(300, 200, player))
+coinGroup.add(Coin(350, 200, player))
+coinGroup.add(Coin(500, 200, player))
+
+potionRedGroup = pygame.sprite.Group()
+
+potionRedGroup.add(PotionRed(200, 500, player))
+potionRedGroup.add(PotionRed(250, 500, player))
+potionRedGroup.add(PotionRed(300, 500, player))
+potionRedGroup.add(PotionRed(350, 500, player))
+potionRedGroup.add(PotionRed(500, 500, player))
 
 
-def drawInfo(screen):
+def drawInfo(screen, player):
     pygame.draw.line(
         screen, gameConstant.WHITE, (0, 50), (gameConstant.SCREEN_WIDTH, 50), 1
     )
     pygame.draw.rect(screen, gameConstant.PANEL, (0, 0, gameConstant.SCREEN_WIDTH, 50))
     heart.render(screen)
-    coin.render(screen)
-    scoreImage = atariFont.render("x00", True, gameConstant.WHITE)
+    coinIcon.render(screen)
+    scoreImage = atariFont.render("x" + str(player.score), True, gameConstant.WHITE)
     screen.blit(scoreImage, (gameConstant.SCREEN_WIDTH - 80, 15))
 
 
@@ -86,6 +103,12 @@ def main():
 
         newArrow = weapon.update()
 
+        for coin in coinGroup:
+            coin.render(screen)
+
+        for potion in potionRedGroup:
+            potion.render(screen)
+
         if newArrow:
             arrowGroup.add(newArrow)
 
@@ -100,8 +123,9 @@ def main():
         for arrow in arrowGroup:
             arrow.render(screen)
 
-        drawInfo(screen)
+        drawInfo(screen, player)
         # print("arrows::", arrowGroup)
+        print(player.health)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

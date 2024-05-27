@@ -8,6 +8,7 @@ from weapons.arrow import Arrow
 class Elf(BaseCharacter):
     def __init__(self, x, y):
         self.offSet = 12
+        self.score = 0
         super().__init__(
             x,
             y,
