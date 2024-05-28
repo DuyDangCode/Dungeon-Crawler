@@ -6,6 +6,7 @@ from item.coin import Coin, CoinIcon
 from item.damageText import DamageText
 from item.heart import Heart
 from item.potionRed import PotionRed
+from tile.world import World
 from weapons.arrow import Arrow
 from weapons.bow import Bow
 import random
@@ -70,11 +71,40 @@ def drawInfo(screen, player):
     screen.blit(scoreImage, (gameConstant.SCREEN_WIDTH - 80, 15))
 
 
+def drawGrid(screen):
+    for i in range(30):
+        pygame.draw.line(
+            screen,
+            gameConstant.WHITE,
+            (i * gameConstant.TILE_SIZE, 0),
+            (i * gameConstant.TILE_SIZE, gameConstant.SCREEN_HEIGHT),
+        )
+        pygame.draw.line(
+            screen,
+            gameConstant.WHITE,
+            (0, i * gameConstant.TILE_SIZE),
+            (gameConstant.SCREEN_WIDTH, i * gameConstant.TILE_SIZE),
+        )
+
+
+tileMap = [
+    [7, 7, 7, 7, 7],
+    [7, 1, 1, 1, 7],
+    [7, 1, 7, 1, 7],
+    [7, 1, 1, 1, 7],
+    [7, 1, 1, 1, 1],
+]
+
+world = World()
+
+
 def main():
     moving_up, moving_down, moving_right, moving_left = False, False, False, False
     while True:
         clock.tick(gameConstant.FPS)
         screen.fill(gameConstant.BACKGROUND)
+        world.render(screen)
+        drawGrid(screen)
         dx, dy = 0, 0
         if moving_up:
             dy += -gameConstant.SPEED
@@ -125,7 +155,6 @@ def main():
 
         drawInfo(screen, player)
         # print("arrows::", arrowGroup)
-        print(player.health)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

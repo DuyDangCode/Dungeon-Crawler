@@ -1,5 +1,6 @@
 import pygame
 import math
+from config import gameConstant
 
 
 class BaseCharacter:
@@ -9,7 +10,7 @@ class BaseCharacter:
         self.updateFrameTime = pygame.time.get_ticks()
         self.animationList = animationList
         self.image = self.animationList[self.action][self.indexFrame]
-        self.rect = pygame.Rect(0, 0, 50, 50)
+        self.rect = pygame.Rect(0, 0, gameConstant.TILE_SIZE, gameConstant.TILE_SIZE)
         self.rect.center = (x, y)
         self.flip = False
         self.animationCooldown = 70
