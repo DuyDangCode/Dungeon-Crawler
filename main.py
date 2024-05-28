@@ -22,7 +22,7 @@ screen = pygame.display.set_mode(
     (gameConstant.SCREEN_WIDTH, gameConstant.SCREEN_HEIGHT)
 )
 
-player = charactersConstant.charactersLists["elf"](100, 100)
+player = charactersConstant.charactersLists["elf"](300, 300)
 weapon = Bow(player.rect)
 
 arrowGroup = pygame.sprite.Group()
@@ -97,13 +97,16 @@ tileMap = [
 
 world = World()
 
+sceenScroll = [0, 0]
+
 
 def main():
     moving_up, moving_down, moving_right, moving_left = False, False, False, False
     while True:
+        global sceenScroll
         clock.tick(gameConstant.FPS)
         screen.fill(gameConstant.BACKGROUND)
-        world.render(screen)
+        world.render(screen, sceenScroll)
         drawGrid(screen)
         dx, dy = 0, 0
         if moving_up:
@@ -116,8 +119,9 @@ def main():
             dx += gameConstant.SPEED
 
         player.move(dx, dy)
-        player.update()
+        sceenScroll = player.update2()
 
+        print(sceenScroll)
         for arrow in arrowGroup:
             damage, damagePos = arrow.update2(enermies)
             if damage:
@@ -138,15 +142,15 @@ def main():
 
         for potion in potionRedGroup:
             potion.render(screen)
+        for enermy in enermies:
+            enermy.render(screen, gameConstant.RED)
 
         if newArrow:
             arrowGroup.add(newArrow)
 
-        player.render(screen, gameConstant.WHITE)
         weapon.render(screen)
-        for enermy in enermies:
-            enermy.render(screen, gameConstant.RED)
-            # print(enermy.health)
+
+        player.render(screen, gameConstant.WHITE)
         for damageText in damageTextGroup:
             damageText.render(screen)
 
@@ -154,7 +158,6 @@ def main():
             arrow.render(screen)
 
         drawInfo(screen, player)
-        # print("arrows::", arrowGroup)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
