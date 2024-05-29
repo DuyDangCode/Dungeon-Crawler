@@ -1,13 +1,31 @@
 import os
+
+import pygame
+from characters.bigDemon import BigDemon
+from characters.elf import Elf
+from characters.goblin import Goblin
+from characters.imp import Imp
+from characters.muddy import Muddy
+from characters.skeleton import Skeleton
+from characters.tinyZombie import TinyZombie
+from item.coin import Coin, CoinIcon
+from item.damageText import DamageText
+from item.floor import Floor
+from item.heart import Heart
+from item.potionRed import PotionRed
+from item.wall import Wall
 from tile.imageTile import imageTileInstance
 from config import gameConstant
 import csv
+
+from weapons.arrow import Arrow
+from weapons.bow import Bow
 
 pathLevel = "levels"
 
 
 class World:
-    def __init__(self):
+    def __init__(self, font):
         self.maps = {}
         for level in os.listdir(pathLevel):
             self.maps[str(level.split(".")[0])] = []
@@ -21,18 +39,146 @@ class World:
                     self.maps[str(level).split(".")[0]].append(data)
         self.scollXValue = 0
         self.scollYValue = 0
+        self.floor = []
+        self.wall = []
+        self.enermies = pygame.sprite.Group()
+        self.arrows = pygame.sprite.Group()
+        self.damageText = pygame.sprite.Group()
+        self.coinIcon = CoinIcon(gameConstant.SCREEN_WIDTH - 100, 25)
+        self.font = font
+        self.potionRed = pygame.sprite.Group()
+        self.coin = pygame.sprite.Group()
+        self.process(1)
 
-    def render(self, surface, screenMap, level=1):
-        self.scollXValue += screenMap[0]
-        self.scollYValue += screenMap[1]
+    def process(self, level):
         for y, row in enumerate(self.maps[str(level)]):
             for x, tileId in enumerate(row):
                 if tileId == -1:
                     continue
-                surface.blit(
-                    imageTileInstance.imageList[str(tileId)],
-                    (
-                        x * gameConstant.TILE_SIZE + self.scollXValue,
-                        y * gameConstant.TILE_SIZE + self.scollYValue,
-                    ),
+
+                if tileId == 9:
+                    self.coin.add(
+                        Coin(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                elif tileId == 10:
+                    self.potionRed.add(
+                        PotionRed(
+                            gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y
+                        )
+                    )
+                elif tileId == 11:
+                    self.player = Elf(
+                        gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y
+                    )
+                    self.weapon = Bow(self.player.rect)
+                    self.heart = Heart(self.player)
+                elif tileId == 12:
+                    self.enermies.add(
+                        Imp(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                elif tileId == 13:
+                    self.enermies.add(
+                        Skeleton(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                elif tileId == 14:
+                    self.enermies.add(
+                        Goblin(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                elif tileId == 15:
+                    self.enermies.add(
+                        Muddy(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                elif tileId == 16:
+                    self.enermies.add(
+                        TinyZombie(
+                            gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y
+                        )
+                    )
+                elif tileId == 17:
+                    self.enermies.add(
+                        BigDemon(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                    )
+                if tileId == 7:
+                    self.wall.append(
+                        Wall(
+                            gameConstant.TILE_SIZE * x,
+                            gameConstant.TILE_SIZE * y,
+                            imageTileInstance.imageList[str(tileId)],
+                        )
+                    )
+                else:
+                    idFloor = 0
+                    if tileId in range(0, 9):
+                        idFloor = tileId
+                    self.floor.append(
+                        Floor(
+                            gameConstant.TILE_SIZE * x,
+                            gameConstant.TILE_SIZE * y,
+                            imageTileInstance.imageList[str(idFloor)],
+                        )
+                    )
+
+    def update(self, dx, dy):
+
+        self.player.move(dx, dy, self.wall)
+        screenScroll = self.player.update2()
+        newArrow = self.weapon.update()
+        for damage in self.damageText:
+            damage.update(screenScroll)
+        for enermy in self.enermies:
+            enermy.update(screenScroll)
+        for potion in self.potionRed:
+            potion.update(screenScroll, self.player)
+        for coin in self.coin:
+            coin.update(screenScroll, self.player)
+        for arrow in self.arrows:
+            damage, damagePos = arrow.update2(self.enermies, screenScroll, self.wall)
+            if damage:
+                self.damageText.add(
+                    DamageText(
+                        damagePos[0],
+                        damagePos[1],
+                        damage,
+                        gameConstant.RED,
+                        self.font,
+                    )
                 )
+        if newArrow:
+            self.arrows.add(newArrow)
+        for block in self.floor:
+            block.update(screenScroll)
+        for block in self.wall:
+            block.update(screenScroll)
+
+    def drawInfo(self, surface):
+        pygame.draw.line(
+            surface, gameConstant.WHITE, (0, 50), (gameConstant.SCREEN_WIDTH, 50), 1
+        )
+        pygame.draw.rect(
+            surface, gameConstant.PANEL, (0, 0, gameConstant.SCREEN_WIDTH, 50)
+        )
+        self.heart.render(surface)
+        self.coinIcon.render(surface)
+        scoreImage = self.font.render(
+            "x" + str(self.player.score), True, gameConstant.WHITE
+        )
+        surface.blit(scoreImage, (gameConstant.SCREEN_WIDTH - 80, 15))
+
+    def render(self, surface):
+        for block in self.floor:
+            block.render(surface)
+        for block in self.wall:
+            block.render(surface)
+        for enermy in self.enermies:
+            enermy.render(surface, gameConstant.RED)
+        for potion in self.potionRed:
+            potion.render(surface)
+        for coin in self.coin:
+            coin.render(surface)
+        self.weapon.render(surface)
+        self.player.render(surface, gameConstant.WHITE)
+        for damageText in self.damageText:
+            damageText.render(surface)
+        for arrow in self.arrows:
+            arrow.render(surface)
+        self.drawInfo(surface)

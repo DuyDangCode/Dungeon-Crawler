@@ -9,12 +9,13 @@ class DamageText(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.count = 0
 
-    def update(self):
+    def update(self, screenScroll):
         if self.count == 30:
             self.kill()
         self.rect.y -= 1
         self.count += 1
+        self.rect.x += screenScroll[0]
+        self.rect.y += screenScroll[1]
 
     def render(self, surface):
-        self.update()
         surface.blit(self.image, self.rect)

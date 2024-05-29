@@ -17,16 +17,16 @@ class Arrow(pygame.sprite.Sprite):
         self.dx = math.cos(math.radians(self.angle)) * gameConstant.ARROW_SPEED
         self.dy = -math.sin(math.radians(self.angle)) * gameConstant.ARROW_SPEED
 
-    def update2(self, enermies):
+    def update2(self, enermies, screenScroll, walls):
         damage = 0
         damagePos = None
-        self.rect.x += int(self.dx)
-        self.rect.y += int(self.dy)
+        self.rect.x += int(self.dx) + screenScroll[0]
+        self.rect.y += int(self.dy) + screenScroll[1]
         if (
-            self.rect.top < 0
-            or self.rect.bottom > gameConstant.SCREEN_HEIGHT
-            or self.rect.left < 0
-            or self.rect.right > gameConstant.SCREEN_WIDTH
+            self.rect.top > gameConstant.SCREEN_HEIGHT
+            or self.rect.bottom < 0
+            or self.rect.left > gameConstant.SCREEN_WIDTH
+            or self.rect.right < 0
         ):
             self.kill()
 
@@ -39,6 +39,9 @@ class Arrow(pygame.sprite.Sprite):
                 self.kill()
                 if enermy.health < 0:
                     enermy.isALive = False
+        for wall in walls:
+            if wall.rect.colliderect(self.rect):
+                self.kill()
         return damage, damagePos
 
     def render(self, surface):

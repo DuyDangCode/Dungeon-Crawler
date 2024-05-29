@@ -14,7 +14,7 @@ class CoinIcon:
         self.rect = self.animationList[self.indexFrame].get_rect()
         self.rect.center = (x, y)
 
-    def update(self):
+    def update(self, screenScroll, player):
         if pygame.time.get_ticks() - self.lastUpdateTime >= self.cooldown:
             self.indexFrame += 1
             if self.indexFrame == len(self.animationList):
@@ -22,25 +22,21 @@ class CoinIcon:
             self.lastUpdateTime = pygame.time.get_ticks()
 
     def render(self, surface):
-        self.update()
         surface.blit(self.animationList[self.indexFrame], self.rect)
 
 
 class Coin(CoinIcon, pygame.sprite.Sprite):
-    def __init__(self, x, y, player):
+    def __init__(self, x, y):
         super().__init__(x, y)
         pygame.sprite.Sprite.__init__(self)
-        self.player = player
-        # for i in range(4):
-        #     self.animationList[i] = pygame.transform.scale_by(
-        #         self.animationList[i], 0.5
-        #     )
 
-    def update(self):
-        if self.rect.colliderect(self.player.rect):
-            self.player.score += 10 + random.randint(0, 10)
+    def update(self, screenScroll, player):
+        if self.rect.colliderect(player.rect):
+            player.score += 10 + random.randint(0, 10)
             self.kill()
-        super().update()
+        self.rect.x += screenScroll[0]
+        self.rect.y += screenScroll[1]
+        super().update(screenScroll, None)
 
     def render(self, surface):
         super().render(surface)
