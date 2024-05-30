@@ -2,7 +2,7 @@ import pygame
 from pygame.display import set_allow_screensaver
 from characters.baseCharacter import BaseCharacter
 from characters.imageCharacter import imageFacotry
-from config import gameConstant, charactersConstant
+from config import gameConstant
 from weapons.arrow import Arrow
 
 
@@ -13,7 +13,7 @@ class Elf(BaseCharacter):
         super().__init__(
             x,
             y,
-            imageFacotry.imageLists[charactersConstant.elfName].playerAnimationList,
+            imageFacotry.imageLists["elf"].playerAnimationList,
             60,
         )
 

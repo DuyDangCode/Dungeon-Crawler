@@ -6,21 +6,13 @@ from characters.muddy import Muddy
 from characters.skeleton import Skeleton
 from characters.tinyZombie import TinyZombie
 
-bigDemonName = "big_demon"
-elfName = "elf"
-goblinName = "goblin"
-impName = "imp"
-muddyName = "muddy"
-skeletonName = "skeleton"
-tinyZombieName = "tiny_zombie"
-
 
 charactersLists = {
-    bigDemonName: BigDemon,
-    elfName: Elf,
-    goblinName: Goblin,
-    impName: Imp,
-    muddyName: Muddy,
-    skeletonName: Skeleton,
-    tinyZombieName: TinyZombie,
+    "big_demon": BigDemon,
+    "elf": Elf,
+    "goblin": Goblin,
+    "imp": Imp,
+    "muddy": Muddy,
+    "skeleton": Skeleton,
+    "tiny_zombie": TinyZombie,
 }

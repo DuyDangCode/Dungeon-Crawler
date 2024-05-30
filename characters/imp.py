@@ -1,14 +1,13 @@
-from characters.baseCharacter import BaseCharacter
+from characters.enemies import Enemies
 from characters.imageCharacter import imageFacotry
-from config import charactersConstant
 from config.gameConstant import HEALTH
 
 
-class Imp(BaseCharacter):
+class Imp(Enemies):
     def __init__(self, x, y):
         super().__init__(
             x,
             y,
-            imageFacotry.imageLists[charactersConstant.impName].playerAnimationList,
+            imageFacotry.imageLists["imp"].playerAnimationList,
             HEALTH,
         )

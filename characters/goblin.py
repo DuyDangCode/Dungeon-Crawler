@@ -1,14 +1,13 @@
-from characters.baseCharacter import BaseCharacter
+from characters.enemies import Enemies
 from characters.imageCharacter import imageFacotry
-from config import charactersConstant
 from config.gameConstant import HEALTH
 
 
-class Goblin(BaseCharacter):
+class Goblin(Enemies):
     def __init__(self, x, y):
         super().__init__(
             x,
             y,
-            imageFacotry.imageLists[charactersConstant.goblinName].playerAnimationList,
+            imageFacotry.imageLists["goblin"].playerAnimationList,
             HEALTH,
         )

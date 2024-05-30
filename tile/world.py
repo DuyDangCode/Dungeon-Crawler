@@ -126,6 +126,8 @@ class World:
         for damage in self.damageText:
             damage.update(screenScroll)
         for enermy in self.enermies:
+            enermy.ai(self.player, self.wall)
+        for enermy in self.enermies:
             enermy.update(screenScroll)
         for potion in self.potionRed:
             potion.update(screenScroll, self.player)
@@ -175,8 +177,8 @@ class World:
             potion.render(surface)
         for coin in self.coin:
             coin.render(surface)
-        self.weapon.render(surface)
         self.player.render(surface, gameConstant.WHITE)
+        self.weapon.render(surface)
         for damageText in self.damageText:
             damageText.render(surface)
         for arrow in self.arrows:

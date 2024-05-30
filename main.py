@@ -1,15 +1,7 @@
-from os import walk
-from config import gameConstant, charactersConstant
+from config import gameConstant
 import pygame
 import sys
-from item.coin import Coin, CoinIcon
-from item.damageText import DamageText
-from item.heart import Heart
-from item.potionRed import PotionRed
 from tile.world import World
-from weapons.arrow import Arrow
-from weapons.bow import Bow
-import random
 
 # pathWeaponsImage = "assets/images/weapons/"
 
