@@ -37,6 +37,7 @@ class World:
                     for tile in row:
                         data.append(int(tile))
                     self.maps[str(level).split(".")[0]].append(data)
+        self.level = 1
         self.scollXValue = 0
         self.scollYValue = 0
         self.floor = []
@@ -48,7 +49,7 @@ class World:
         self.font = font
         self.potionRed = pygame.sprite.Group()
         self.coin = pygame.sprite.Group()
-        self.process(3)
+        self.process(self.level)
 
     def process(self, level):
         for y, row in enumerate(self.maps[str(level)]):
@@ -110,6 +111,14 @@ class World:
                     idFloor = 0
                     if tileId in range(0, 9):
                         idFloor = tileId
+                    if tileId == 8:
+                        self.checkPoint = pygame.Rect(
+                            0, 0, gameConstant.TILE_SIZE, gameConstant.TILE_SIZE
+                        )
+                        self.checkPoint.center = (
+                            x * gameConstant.TILE_SIZE,
+                            y * gameConstant.TILE_SIZE,
+                        )
                     self.floor.append(
                         Floor(
                             gameConstant.TILE_SIZE * x,
@@ -118,10 +127,34 @@ class World:
                         )
                     )
 
+    def resetLevel(self, level):
+        self.scollXValue = 0
+        self.scollYValue = 0
+        self.floor = []
+        self.wall = []
+        self.enermies = pygame.sprite.Group()
+        self.arrows = pygame.sprite.Group()
+        self.damageText = pygame.sprite.Group()
+        self.potionRed = pygame.sprite.Group()
+        self.coin = pygame.sprite.Group()
+        self.process(level)
+
+    def uplevel(self):
+        self.level += 1
+        if self.level >= len(self.maps):
+            self.level = len(self.maps) - 1
+        self.resetLevel(self.level)
+
     def update(self, dx, dy):
 
         self.player.move(dx, dy, self.wall)
         screenScroll = self.player.update2()
+        self.checkPoint.x += screenScroll[0]
+        self.checkPoint.y += screenScroll[1]
+
+        if self.checkPoint.colliderect(self.player.rect):
+            print("exits")
+            self.uplevel()
         newArrow = self.weapon.update()
         for damage in self.damageText:
             damage.update(screenScroll)
