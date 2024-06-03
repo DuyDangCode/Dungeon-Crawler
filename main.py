@@ -1,6 +1,8 @@
+from buttons.imageButton import ButtonImage
 from config import gameConstant
 import pygame
 import sys
+from tile.screenFade import ScreenFade
 from tile.world import World
 
 # pathWeaponsImage = "assets/images/weapons/"
@@ -32,7 +34,10 @@ def drawGrid(screen):
 
 
 world = World(atariFont)
-
+butonImage = ButtonImage()
+screenFade = ScreenFade()
+introFade = True
+gameOver = False
 screenScroll = [0, 0]
 
 
@@ -40,6 +45,9 @@ def main():
     moving_up, moving_down, moving_right, moving_left = False, False, False, False
     while True:
         global screenScroll
+        global introFade
+        global gameOver
+
         clock.tick(gameConstant.FPS)
         screen.fill(gameConstant.BACKGROUND)
         dx, dy = 0, 0
@@ -51,7 +59,8 @@ def main():
             dx += -gameConstant.SPEED
         if moving_right:
             dx += gameConstant.SPEED
-        world.update(dx, dy)
+
+        introFade = world.update(dx, dy) or introFade
         world.render(screen)
 
         for event in pygame.event.get():
@@ -76,6 +85,27 @@ def main():
                     moving_right = False
                 if event.key == pygame.K_s:
                     moving_down = False
+
+        gameOver = world.gameOver
+        if introFade:
+            introFade = screenFade.fade(screen, 0)
+        if gameOver:
+            screenFade.fade(screen, 1)
+
+            buttonRestartImage = butonImage.imagesList["button_restart"]
+            buttonRestartRect = buttonRestartImage.get_rect()
+            buttonRestartRect.center = (
+                gameConstant.SCREEN_WIDTH / 2,
+                gameConstant.SCREEN_HEIGHT / 2,
+            )
+            posMouse = pygame.mouse.get_pos()
+            screen.blit(buttonRestartImage, buttonRestartRect)
+            if buttonRestartRect.collidepoint(posMouse):
+                if pygame.mouse.get_pressed()[0]:
+                    gameOver = False
+                    introFade = True
+                    world.gameOver = False
+                    world.resetLevel(world.level)
 
         pygame.display.update()
 

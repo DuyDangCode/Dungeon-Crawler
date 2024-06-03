@@ -18,6 +18,7 @@ from tile.imageTile import imageTileInstance
 from config import gameConstant
 import csv
 
+from tile.screenFade import ScreenFade
 from weapons.arrow import Arrow
 from weapons.bow import Bow
 
@@ -147,6 +148,7 @@ class World:
         self.resetLevel(self.level)
 
     def update(self, dx, dy):
+        newLevel = False
         if not self.gameOver:
             self.player.move(dx, dy, self.wall)
             if self.player.health < 0:
@@ -156,39 +158,41 @@ class World:
             self.checkPoint.y += screenScroll[1]
 
             if self.checkPoint.colliderect(self.player.rect):
-                print("exits")
                 self.uplevel()
-            newArrow = self.weapon.update()
-            for damage in self.damageText:
-                damage.update(screenScroll)
-            for enermy in self.enermies:
-                enermy.ai(self.player, self.wall)
-            for enermy in self.enermies:
-                enermy.update(screenScroll)
-            for potion in self.potionRed:
-                potion.update(screenScroll, self.player)
-            for coin in self.coin:
-                coin.update(screenScroll, self.player)
-            for arrow in self.arrows:
-                damage, damagePos = arrow.update2(
-                    self.enermies, screenScroll, self.wall
-                )
-                if damage:
-                    self.damageText.add(
-                        DamageText(
-                            damagePos[0],
-                            damagePos[1],
-                            damage,
-                            gameConstant.RED,
-                            self.font,
-                        )
+                newLevel = True
+            else:
+                newArrow = self.weapon.update()
+                for damage in self.damageText:
+                    damage.update(screenScroll)
+                for enermy in self.enermies:
+                    enermy.ai(self.player, self.wall)
+                for enermy in self.enermies:
+                    enermy.update(screenScroll)
+                for potion in self.potionRed:
+                    potion.update(screenScroll, self.player)
+                for coin in self.coin:
+                    coin.update(screenScroll, self.player)
+                for arrow in self.arrows:
+                    damage, damagePos = arrow.update2(
+                        self.enermies, screenScroll, self.wall
                     )
-            if newArrow:
-                self.arrows.add(newArrow)
-            for block in self.floor:
-                block.update(screenScroll)
-            for block in self.wall:
-                block.update(screenScroll)
+                    if damage:
+                        self.damageText.add(
+                            DamageText(
+                                damagePos[0],
+                                damagePos[1],
+                                damage,
+                                gameConstant.RED,
+                                self.font,
+                            )
+                        )
+                if newArrow:
+                    self.arrows.add(newArrow)
+                for block in self.floor:
+                    block.update(screenScroll)
+                for block in self.wall:
+                    block.update(screenScroll)
+        return newLevel
 
     def drawInfo(self, surface):
         pygame.draw.line(

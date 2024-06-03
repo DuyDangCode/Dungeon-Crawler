@@ -17,7 +17,6 @@ class Enemies(BaseCharacter):
         self.seePlayer = True
 
     def ai(self, player, walls):
-
         dx = 0
         dy = 0
         if self.holdBack:
