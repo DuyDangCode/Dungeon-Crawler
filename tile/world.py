@@ -48,7 +48,7 @@ class World:
         self.font = font
         self.potionRed = pygame.sprite.Group()
         self.coin = pygame.sprite.Group()
-        self.process(1)
+        self.process(3)
 
     def process(self, level):
         for y, row in enumerate(self.maps[str(level)]):

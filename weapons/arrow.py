@@ -35,7 +35,8 @@ class Arrow(pygame.sprite.Sprite):
                 damage = 10 + random.randint(0, 10)
                 enermy.health -= damage
                 damagePos = (enermy.rect.centerx, enermy.rect.centery)
-
+                enermy.holdBack = True
+                enermy.holdBackLasttime = pygame.time.get_ticks()
                 self.kill()
                 if enermy.health < 0:
                     enermy.isALive = False
