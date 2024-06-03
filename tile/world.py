@@ -201,6 +201,12 @@ class World:
         pygame.draw.rect(
             surface, gameConstant.PANEL, (0, 0, gameConstant.SCREEN_WIDTH, 50)
         )
+        levelImage = self.font.render(
+            "Level: " + str(self.level), True, gameConstant.WHITE
+        )
+        levelImageRect = levelImage.get_rect()
+        levelImageRect.center = (gameConstant.SCREEN_WIDTH / 2, 25)
+        surface.blit(levelImage, levelImageRect)
         self.heart.render(surface)
         self.coinIcon.render(surface)
         scoreImage = self.font.render(

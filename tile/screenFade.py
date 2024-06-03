@@ -30,11 +30,10 @@ class ScreenFade:
                 (0, SCREEN_HEIGHT / 2 + self.y, SCREEN_WIDTH, SCREEN_HEIGHT / 2),
             )
         else:
-            pygame.draw.rect(
-                surface,
-                MAROON,
-                (0, 0, SCREEN_WIDTH, self.y),
-            )
+            tempSurface = pygame.Surface((SCREEN_WIDTH, self.y))
+            tempSurface.set_alpha(128)
+            tempSurface.fill(MAROON)
+            surface.blit(tempSurface, (0, 0))
 
     def fade(self, surface, type):
 
