@@ -19,6 +19,7 @@ class Elf(BaseCharacter):
 
     def update2(self):
         screenScroll = [0, 0]
+        print(self.health)
         super().update(screenScroll)
         if self.rect.right > (gameConstant.SCREEN_WIDTH - gameConstant.THRESHOLD_X):
             screenScroll[0] = (

@@ -50,7 +50,8 @@ class BaseCharacter(pygame.sprite.Sprite):
                     self.rect.bottom = wall.rect.top
 
     def update(self, screenScroll):
-        if self.health < 0:
+        if not self.isALive:
+            print("kill")
             self.kill()
         if pygame.time.get_ticks() - self.updateFrameTime > self.animationCooldown:
             self.indexFrame += 1
