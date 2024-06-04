@@ -5,7 +5,7 @@ from weapons.arrow import Arrow
 
 
 class Bow:
-    def __init__(self, rec):
+    def __init__(self, rec, sound):
         self.rec = rec
         self.angle = 0
         self.originalImage = imageWeaponInstance.imageLists["bow"]
@@ -14,6 +14,7 @@ class Bow:
         self.lastArrowTime = pygame.time.get_ticks()
         self.cooldownShoot = 300
         self.isShooting = False
+        self.sound = sound
 
     def update(self):
 
@@ -30,7 +31,9 @@ class Bow:
             arrow = Arrow(
                 self.rec.centerx, self.rec.centery, self.angle, self.imageArrow
             )
+            self.sound.play()
             self.isShooting = True
+            self.lastArrowTime = pygame.time.get_ticks()
         if not pygame.mouse.get_pressed()[0]:
             self.isShooting = False
         return arrow

@@ -26,13 +26,15 @@ class CoinIcon:
 
 
 class Coin(CoinIcon, pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, sound):
         super().__init__(x, y)
         pygame.sprite.Sprite.__init__(self)
+        self.sound = sound
 
     def update(self, screenScroll, player):
         if self.rect.colliderect(player.rect):
             player.score += 10 + random.randint(0, 10)
+            self.sound.play()
             self.kill()
         self.rect.x += screenScroll[0]
         self.rect.y += screenScroll[1]

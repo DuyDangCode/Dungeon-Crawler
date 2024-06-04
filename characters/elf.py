@@ -47,4 +47,4 @@ class Elf(BaseCharacter):
         surface.blit(
             flipImage, (self.rect.x, self.rect.y - self.offSet * gameConstant.SCALE)
         )
-        pygame.draw.rect(surface, color, self.rect, 1)
+        # pygame.draw.rect(surface, color, self.rect, 1)

@@ -1,4 +1,5 @@
 import os
+from sys import set_asyncgen_hooks
 
 import pygame
 from characters.bigDemon import BigDemon
@@ -18,15 +19,14 @@ from tile.imageTile import imageTileInstance
 from config import gameConstant
 import csv
 
-from tile.screenFade import ScreenFade
-from weapons.arrow import Arrow
 from weapons.bow import Bow
 
 pathLevel = "levels"
 
 
 class World:
-    def __init__(self, font):
+
+    def __init__(self, font, sounds):
         self.maps = {}
         for level in os.listdir(pathLevel):
             self.maps[str(level.split(".")[0])] = []
@@ -38,6 +38,7 @@ class World:
                     for tile in row:
                         data.append(int(tile))
                     self.maps[str(level).split(".")[0]].append(data)
+        self.sounds = sounds
         self.level = 1
         self.gameOver = False
         self.scollXValue = 0
@@ -51,6 +52,7 @@ class World:
         self.font = font
         self.potionRed = pygame.sprite.Group()
         self.coin = pygame.sprite.Group()
+        self.win = False
         self.process(self.level)
 
     def process(self, level):
@@ -61,19 +63,25 @@ class World:
 
                 if tileId == 9:
                     self.coin.add(
-                        Coin(gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y)
+                        Coin(
+                            gameConstant.TILE_SIZE * x,
+                            gameConstant.TILE_SIZE * y,
+                            self.sounds["coin"],
+                        )
                     )
                 elif tileId == 10:
                     self.potionRed.add(
                         PotionRed(
-                            gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y
+                            gameConstant.TILE_SIZE * x,
+                            gameConstant.TILE_SIZE * y,
+                            self.sounds["heal"],
                         )
                     )
                 elif tileId == 11:
                     self.player = Elf(
                         gameConstant.TILE_SIZE * x, gameConstant.TILE_SIZE * y
                     )
-                    self.weapon = Bow(self.player.rect)
+                    self.weapon = Bow(self.player.rect, self.sounds["arrow_shot"])
                     self.heart = Heart(self.player)
                 elif tileId == 12:
                     self.enermies.add(
@@ -144,7 +152,8 @@ class World:
     def uplevel(self):
         self.level += 1
         if self.level >= len(self.maps):
-            self.level = len(self.maps) - 1
+            self.win = True
+            self.level = 1
         self.resetLevel(self.level)
 
     def update(self, dx, dy):
@@ -186,6 +195,7 @@ class World:
                                 self.font,
                             )
                         )
+                        self.sounds["arrow_hit"].play()
                 if newArrow:
                     self.arrows.add(newArrow)
                 for block in self.floor:

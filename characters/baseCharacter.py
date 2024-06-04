@@ -51,7 +51,6 @@ class BaseCharacter(pygame.sprite.Sprite):
 
     def update(self, screenScroll):
         if not self.isALive:
-            print("kill")
             self.kill()
         if pygame.time.get_ticks() - self.updateFrameTime > self.animationCooldown:
             self.indexFrame += 1
@@ -65,4 +64,4 @@ class BaseCharacter(pygame.sprite.Sprite):
     def render(self, surface, color):
         flipImage = pygame.transform.flip(self.image, self.flip, False)
         surface.blit(flipImage, self.rect)
-        pygame.draw.rect(surface, color, self.rect, 1)
+        # pygame.draw.rect(surface, color, self.rect, 1)
